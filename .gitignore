@@ -1,0 +1,7 @@
+.vscode/.*
+.vscode/*
+cmake-build-debug/*
+.idea/*
+build/*
+Doxyfile
+*.txt.user
