@@ -36,8 +36,15 @@ class TrieNode
         bool operator!=(const TrieNode& r) const { return !operator==(r.value_); }
 
         const type_t& value() const { return value_; }
-        node_t& node(const type_t& v) { return children_[v]; }
-        node_t& append(const type_t& v) { children_[v] = TrieNode(v); return children_[v]; }
+        node_t& node(const type_t& v)
+        {
+            return children_[v];
+        }
+        node_t& append(const type_t& v)
+        {
+            children_[v] = TrieNode(v);
+            return children_[v];
+        }
 
         friend std::ostream& operator<<(std::ostream& out, const TrieNode& node);
     private:
@@ -45,13 +52,19 @@ class TrieNode
         children_t children_;
 };
 
+void print_node(std::ostream& out, const TrieNode& node)
+{
+    if (node.value() > 0) {
+        out << node.value() << '\n';
+    }
+    for (const auto& n : node) {
+        print_node(out, n.second);
+    }
+}
+
 std::ostream& operator<<(std::ostream& out, const TrieNode& node)
 {
-    out << node.value() << '\n';
-    for (auto& n : node) {
-        out << n.first << ' ';
-    }
-    out << '\n';
+    print_node(out, node);
     return out;
 }
 
@@ -73,15 +86,14 @@ class Trie
             for (size_t i = 0; i < data.size(); ++i) {
                 auto& e = data[i];
                 std::cout << e << " ";
-                if (current != e) {
-                    auto it = current.find(e);
-                    if (it == current.end()) {
-                        current = current.append(e);
-                    }
-                    else {
-                        current = current.node(e);
-                    }
+                auto it = current.find(e);
+                if (it != current.end()) {
+                    current = current.node(e);
                 }
+                else {
+                    current = current.append(e);
+                }
+                std::cout << current << '\n';
             }
             std::cout << '\n';
         }
@@ -94,7 +106,8 @@ class Trie
         node_t root_;
 };
 
-//std::ostream& operator<<(std::ostream& out, const Trie& trie)
-//{
-//    Trie::node_t& current = trie.root_;
-//}
+std::ostream& operator<<(std::ostream& out, const Trie& trie)
+{
+    print_node(out, trie.root_);
+    return out;
+}

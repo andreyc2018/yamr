@@ -311,6 +311,7 @@ TEST(TrieNode, Init)
 TEST(Trie, Add)
 {
     Trie t;
-    t.add("one");
+    std::string data("one");
+    t.add(data);
     std::cout << t;
 }
